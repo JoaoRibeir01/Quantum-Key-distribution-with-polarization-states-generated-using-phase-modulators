@@ -1,0 +1,316 @@
+## Global System
+## Alphas measured in Eletric Field in +90º angle rotation
+from cmath import exp,pi, sin, cos, sqrt
+from pylab import xlim, ylim, plot, figure, show
+from sympy import I
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np; import random
+from numpy import arange
+from pylab import plot,xlabel,ylabel,show, figure, legend, suptitle
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+%matplotlib notebook
+
+### Universal Code 
+#Global variables: (2) Rcecetion components of recetion system
+e_yG  = [] * len(tApplied); e_zG = [] * len(tensionsApplied); eVpi_Global = [] * len(tApplied)
+​
+# Following "Measure of Twist-Induced Circular Birefringence in Long Single-Mode Fibers: Theory and Experiments"
+# Aproaches of random values in alterion of SOP proves an eliptical propagation of the state
+​
+#angle = random.normalvariate(0,1.884); print(angle) # length fiber 2255 m
+#angle = random.normalvariate(0,1.546); print(angle) #length fiber 5800 m
+#angle = random.normalvariate(0,0.889); print(angle) #length fiber 16660 m
+#length fiber 25320 m
+#angle = random.normalvariate(0,1.738); print(angle) #length 3400 m
+#angle = random.normalvariate(0,0.705); print(angle) #length fiber 10 110 m
+#angle = random.gauss(0,2.252); print(angle) # especific case w/ p = 0.07 (1/m)
+​
+transmittivity = 0.77625 #0.22 dB/km at 1.55 um
+#Arbitrary values to n that implies a variation in refractive index
+#Runge-Kutta method 4th order
+​
+## Esfera Poincaré 3D
+theta = np.arange(0,2*pi,0.01);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta); y = np.sin(phi) * np.sin (theta); z = np.cos(phi) 
+    
+fig = plt.figure()
+ax = Axes3D(fig)
+​
+def f(b2,z): 
+    p = 0.01; s = 0.0056
+    return -p * b2 + s * random.normalvariate(0,1)
+​
+def rk6(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h) # delimiting interval for z
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    #plot(zpoints,bpoints,label='$b2$')
+    for p in range(len(tApplied)):
+        functionG = exp(I * tensionsApplied[p]/V_pi * pi) #Euler Formule
+        eVpi_Global.append(functionG)
+        ey =  - e_z0 * eVpi_Recetion[p] * transmittivity * (sin(pi/2) * alpha_Transmission[3] * eVpi[p] - cos(pi/2))
+        e_yG.append(ey)
+    for n in range(len(tensionsApplied)):
+        ez = - transmittivity * e_y0 * (cos(pi/2) * alpha_Transmission[3] * eVpi[n] + sin(pi/2))
+        e_zG.append(ez)    
+    #Stokes Parameteres for any applied voltage to Phase Modulator
+    for p in range(len(e_yG)):
+        for j in range(len(e_zG)):
+            s0_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(alpha_Recetion[3] * e_yG[p])) + e_zG[j] * (np.conj(e_zG[j]))
+            s1_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(alpha_Recetion[3] * e_yG[p])) - e_zG[j] * (np.conj(e_zG[j]))
+            s2_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(e_zG[j])) + e_zG[j] * (np.conj(alpha_Recetion[3] * e_yG[p]))
+            s3_Global = I * (alpha_Recetion[3] * e_yG[p] * (np.conj(e_zG[j])) - e_zG[j] * (np.conj(alpha_Recetion[3] * e_yG[p])))
+            k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+            #Defined Quantum State at output Phase Modulator
+            ax.scatter(k2_Global,k1_Global,k3_Global,color = 'green', alpha = 0.9, label = 'Arbitrary angle rotation')
+rk6(500)
+#ax.scatter(k2_Global,k1_Global,k3_Global,color = 'brown', alpha = 0.9, label = 'Arbitrary angle rotation')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha = 0.1)
+ax.set_title("Poincaré Sphere 3D", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+show()
+
+-0.02346925343366118
+<ipython-input-7-e5be6d03c0da>:79: ComplexWarning: Casting complex values to real discards the imaginary part
+  k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global)
+import numpy as np; import random
+from numpy import arange
+from pylab import plot,xlabel,ylabel,show, figure, legend, suptitle
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+%timeit
+​
+#Arbitrary values to n that implies a variation in refractive index
+#Runge-Kutta method 4th order
+# 1st component for b1
+​
+def f(b,z): 
+    p = 0.051; s = 0.0433
+    return -p * b + s * random.normalvariate(0,1)
+​
+def rk5(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h) # delimiting interval for z
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    plot(zpoints,bpoints,label='$b1$ ')
+​
+#2nd component of birrefringence b2
+​
+def f(b2,z): 
+    p = 0.051; s = 0.051
+    return -p * b2 + s * random.normalvariate(0,1)
+​
+m2 = []
+def rk6(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h) # delimiting interval for z
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    plot(zpoints,bpoints,label='$b2$')
+    for i in range(len(bpoints)):
+        m2 = bpoints[i]
+        
+rk5(500)
+rk6(500)
+#plt.title('Langevin process for beat length = 35,1 m')
+plt.xlabel('Length Fiber(m)')
+plt.ylabel('Birefringence values(m$^{-1}$)')
+plt.legend()
+plt.show()
+
+## Global System for alphas measured in Eletric Field
+​
+## Arbitrary Angle Rotation
+import numpy as np; import random
+from numpy import arange
+from pylab import plot,xlabel,ylabel,show, figure, legend, suptitle
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+%timeit
+​
+#Arbitrary values to n that implies a variation in refractive index
+#Runge-Kutta method 4th order
+# 1st component for b1
+​
+def f(b,z): 
+    p = 0.07; s = 0.139
+    return -p * b + s * random.normalvariate(0,1)
+​
+def rk5(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h)
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    plot(zpoints,bpoints,label='$b1$ ')
+​
+#2nd component of birrefringence b2
+​
+def f(b2,z): 
+    p = 0.07; s = 0.139
+    return -p * b2 + s * random.normalvariate(0,1)
+​
+m2 = []
+def rk6(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h) # delimiting interval for z
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    plot(zpoints,bpoints,label='$b2$')
+    for i in range(len(bpoints)):
+        m2 = bpoints[i]
+        
+rk5(500)
+rk6(500)
+plt.title('Langevin process for beat length = 11,9 m')
+plt.xlabel('Length Fiber(m)')
+plt.ylabel('Birefringence values(m$^-1$))')
+plt.legend()
+plt.show()
+
+## Global system
+## Alpha Transmission = 1.5 dB in Eletric Field Components in arbitray angle propagation
+from cmath import exp,pi, sin, cos, sqrt
+from pylab import xlim, ylim, plot, figure, show
+from sympy import I
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np; import random
+from numpy import arange
+from pylab import plot,xlabel,ylabel,show, figure, legend, suptitle
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+​
+%matplotlib notebook
+​
+### Universal Code 
+#Global variables: (2) Rcecetion components of recetion system
+e_yG  = [] * len(tApplied); e_zG = [] * len(tensionsApplied); eVpi_Global = [] * len(tApplied)
+​
+# Following "Measure of Twist-Induced Circular Birefringence in Long Single-Mode Fibers: Theory and Experiments"
+# Aproaches of random values in alterion of SOP proves an eliptical propagation of the state
+​
+#angle = random.normalvariate(0,1.884); print(angle) # length fiber 2255 m
+#angle = random.normalvariate(0,1.546); print(angle) #length fiber 5800 m
+#angle = random.normalvariate(0,0.889); print(angle) #length fiber 16660 m
+#length fiber 25320 m
+#angle = random.normalvariate(0,1.738); print(angle) #length 3400 m
+#angle = random.normalvariate(0,0.705); print(angle) #length fiber 10 110 m
+#angle = random.gauss(0,2.252); print(angle) # especific case w/ p = 0.07 (1/m)
+​
+transmittivity = 0.77625 #0.22 dB/km at 1.55 um
+#Arbitrary values to n that implies a variation in refractive index
+#Runge-Kutta method 4th order
+​
+## Esfera Poincaré 3D
+theta = np.arange(0,2*pi,0.01);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta); y = np.sin(phi) * np.sin (theta); z = np.cos(phi) 
+    
+fig = plt.figure()
+ax = Axes3D(fig)
+​
+def f(b2,z): 
+    p = 0.01; s = 0.0056
+    return -p * b2 + s * random.normalvariate(0,1)
+​
+def rk6(N):
+    a = 0
+    b = 100.0
+    h = (b-a)/N
+    zpoints = np.arange(a,b,h) # delimiting interval for z
+    bpoints = []
+    b = 0.00 #initial value b(0)
+    for z in zpoints:
+        bpoints.append(b)
+        k1 = h*f(b,z)
+        k2 = h*f(b+0.5*k1,z+0.5*h)
+        k3 = h*f(b+0.5*k2,z+0.5*h)
+        k4 = h*f(b+k3,z+h)
+        b += (k1+2*k2+2*k3+k4)/6
+    #plot(zpoints,bpoints,label='$b2$')
+    m2 = [] * len(bpoints)
+    for j in range(len(bpoints)): # convert m^-1 to units of angle (rad)
+        m = bpoints[j] * zpoints[j]
+        m2.append(m)
+    #Generating a random value in m2
+    for p in range(len(tApplied)):
+        functionG = exp(I * tensionsApplied[p]/V_pi * pi) #Euler Formule
+        eVpi_Global.append(functionG)
+        ey =  - e_z0 * eVpi_Recetion[0] * transmittivity * (sin(random.choice(m2)) * alpha_Transmission[3] * eVpi[p] - cos(random.choice(m2)))
+        e_yG.append(ey)
+    for n in range(len(tensionsApplied)):
+        ez = - transmittivity * e_y0 * (cos(random.choice(m2)) * alpha_Transmission[3] * eVpi[n] + sin(random.choice(m2)))
+        e_zG.append(ez)    
+    #Stokes Parameteres for any applied voltage to Phase Modulator
+    for j in range(len(e_zG)):    
+        for p in range(len(e_yG)):
+            s0_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(alpha_Recetion[3] * e_yG[p])) + e_zG[j] * (np.conj(e_zG[j]))
+            s1_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(alpha_Recetion[3] * e_yG[p])) - e_zG[j] * (np.conj(e_zG[j]))
+            s2_Global = alpha_Recetion[3] * e_yG[p] * (np.conj(e_zG[j])) + e_zG[j] * (np.conj(alpha_Recetion[3] * e_yG[p]))
+            s3_Global = I * (alpha_Recetion[3] * e_yG[p] * (np.conj(e_zG[j])) - e_zG[j] * (np.conj(alpha_Recetion[3] * e_yG[p])))
+            #Normalized Stokes Parameters & SOP -> Stokes Parameters in 3D
+            k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+            #Defined Quantum State at output Phase Modulator
+            ax.scatter(k2_Global,k1_Global,k3_Global,color = 'red', alpha = 0.9, label = 'Arbitrary angle rotation')
+    print(random.choice(m2))
+​
+rk6(500)
+#ax.scatter(k2_Global,k1_Global,k3_Global,color = 'brown', alpha = 0.9, label = 'Arbitrary angle rotation')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha = 0.1)
+ax.set_title("Esfera Poincaré", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+#ax.legend(loc = 'upper left')
+show()
