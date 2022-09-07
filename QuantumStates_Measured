@@ -1,0 +1,44 @@
+## Data Treatment
+import pandas as pd; import numpy as np
+import matplotlib.pyplot as plt
+from cmath import pi
+from mpl_toolkits.mplot3d import Axes3D
+%matplotlib notebook
+
+m = pd.read_excel(r"C:\Users\CloudPc\Desktop\EstadosQ_ModuFase\Lab_Results\Laser_Output.xlsx")
+k = (m["Stokes 1"]);l = (m["Stokes 2"]);n = (m["Stokes 3"])
+#m1 = pd.read_excel(r"C:\Users\CloudPc\Desktop\EstadosQ_ModuFase\Lab_Results\Transmission_63mVApplied.xlsx")
+#k1 = (m1["Stokes 1"]);l1 = (m1["Stokes 2"]);n1 = (m1["Stokes 3"])
+#m2 = pd.read_excel(r"C:\Users\CloudPc\Desktop\EstadosQ_ModuFase\Lab_Results\Transmission_126mVApplied.xlsx")
+#k2 = (m2["Stokes 1"]);l2 = (m2["Stokes 2"]);n2 = (m2["Stokes 3"])
+#m3 = pd.read_excel(r"C:\Users\CloudPc\Desktop\EstadosQ_ModuFase\Lab_Results\Transmission_188mVApplied.xlsx")
+#k3 = (m3["Stokes 1"]);l3 = (m3["Stokes 2"]);n3 = (m3["Stokes 3"])
+​
+# Poincaré Sphere 3D
+theta = np.arange(0,2*pi,0.01);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta);y = np.sin(phi) * np.sin (theta);z = np.cos(phi)
+​
+fig = plt.figure()
+ax = Axes3D(fig)
+st_x, st_y, st_z = (k,l,n)
+​
+for i in range(len(k)):
+    ax.scatter(k[i],l[i],n[i], color = 'blue' , alpha = 0.5)
+​
+#for j in range(len(k1)):
+#    ax.scatter(k1[j],l1[j],n1[j], color = 'red' , alpha = 0.5)
+#    ax.scatter(k2[j],l2[j],n2[j], color = 'black' , alpha = 0.5)
+#    ax.scatter(k3[j],l3[j],n3[j], color = 'purple' , alpha = 0.5)
+    
+ax.scatter(st_x,st_y,st_z, color = 'blue', alpha = 0.5, label = 'Output Laser')  
+#ax.scatter(k1,l1,n1, color = 'red' , alpha = 0.5, label = 'V_{π/2} aplicado')
+#ax.scatter(k2,l2,n2, color = 'black', alpha = 0.5, label = 'V_{π} aplicado')
+#ax.scatter(k3,l3,n3, color = 'purple', alpha = 0.6, label = 'V_{3π/2} aplicado')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha=0.1)
+ax.set_title("Esfera Poincaré", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+ax.legend(loc = 'upper left')
+plt.show()
