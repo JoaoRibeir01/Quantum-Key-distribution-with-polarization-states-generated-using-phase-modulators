@@ -1,0 +1,353 @@
+#Components 1º Phase Modelator
+#Stokes Parameters in function to Matrix Parameters
+#Poincaré Sphere 3D for ContinuousTension Applied
+#Quantum State Esfera Poincaré 3D
+#Global variabels
+
+#Global Variables
+from cmath import sqrt
+import numpy as np
+​
+V_pi = 1 #V
+tensionsApplied = np.array([0,1.5,1,0.5]) # V
+alpha_Transmission = np.array([1,1.0593,1.122,1.172,1.189,1.259]) # linear PDL transmission 
+tApplied = np.array([0,0.5]) # V
+alpha_Recetion = np.array([1,1.0593,1.122,1.123,1.189,1.259])  # linear PDL recetion
+tpoints = np.linspace(0,4)
+e_z0 = 1/sqrt(2); e_y0 = 1/sqrt(2)
+
+#Transmission System
+from cmath import exp,pi, sin, cos, sqrt, polar
+from pylab import xlim, ylim, plot, figure, show
+from sympy import I
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+​
+%matplotlib notebook
+​
+e_y = [] * len(tensionsApplied); eVpi= [] * len(tensionsApplied)
+​
+for c in range(len(tensionsApplied)):
+    function = exp(I*tensionsApplied[c]/V_pi * pi)
+    eVpi.append(function)
+    e = eVpi[c] * e_y0 
+    e_y.append(e)
+    e_z = e_z0 
+    
+# Poincaré Sphere 3D
+theta = np.arange(0,2*pi,0.01);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta);y = np.sin(phi) * np.sin (theta);z = np.cos(phi)
+​
+fig = plt.figure()
+ax = Axes3D(fig)
+​
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[0] * e_y[j] * (np.conj(alpha_Transmission[0] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[0] * e_y[j] * (np.conj(alpha_Transmission[0] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[0] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[0] * e_y[j]))
+    s3 = I * (alpha_Transmission[0] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[0] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0)
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'red', alpha = 0.9)
+    
+s0 = alpha_Transmission[0] * e_y[1] * (np.conj(alpha_Transmission[0] * e_y[1])) + e_z * (np.conj(e_z))
+s1 = alpha_Transmission[0] * e_y[1] * (np.conj(alpha_Transmission[0] * e_y[1])) - e_z * (np.conj(e_z))
+s2 = alpha_Transmission[0] * e_y[1] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[0] * e_y[1]))
+s3 = I * (alpha_Transmission[0] * e_y[1] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[0] * e_y[1])))
+k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0)
+##Defined Quantum State at output Phase Modulator
+ax.scatter(k2,k1,k3,color = 'red', alpha = 0.9)
+
+s0 = alpha_Transmission[0] * e_y[2] * (np.conj(alpha_Transmission[0] * e_y[2])) + e_z * (np.conj(e_z))
+s1 = alpha_Transmission[0] * e_y[2] * (np.conj(alpha_Transmission[0] * e_y[2])) - e_z * (np.conj(e_z))
+s2 = alpha_Transmission[0] * e_y[2] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[0] * e_y[2]))
+s3 = I * (alpha_Transmission[0] * e_y[2] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[0] * e_y[2])))
+k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0)
+##Defined Quantum State at output Phase Modulator
+ax.scatter(k2,k1,k3,color = 'purple', alpha = 0.9)
+
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[3] * e_y[j] * (np.conj(alpha_Transmission[3] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[3] * e_y[j] * (np.conj(alpha_Transmission[3] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[3] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[3] * e_y[j]))
+    s3 = I * (alpha_Transmission[3] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[3] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0)
+#Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'red', alpha = 0.9)
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[1] * e_y[j] * (np.conj(alpha_Transmission[1] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[1] * e_y[j] * (np.conj(alpha_Transmission[1] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[1] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[1] * e_y[j]))
+    s3 = I * (alpha_Transmission[1] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[1] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'black', alpha = 0.6) 
+
+##Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[2] * e_y[j] * (np.conj(alpha_Transmission[2] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[2] * e_y[j] * (np.conj(alpha_Transmission[2] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[2] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[2] * e_y[j]))
+    s3 = I * (alpha_Transmission[2] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[2] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'green', alpha = 0.6)
+   
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[3] * e_y[j] * (np.conj(alpha_Transmission[3] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[3] * e_y[j] * (np.conj(alpha_Transmission[3] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[3] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[3] * e_y[j]))
+    s3 = I * (alpha_Transmission[3] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[3] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'brown', alpha = 0.6)   
+
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[4] * e_y[j] * (np.conj(alpha_Transmission[4] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[4] * e_y[j] * (np.conj(alpha_Transmission[4] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[4] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[4] * e_y[j]))
+    s3 = I * (alpha_Transmission[4] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[4] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'blue', alpha = 0.6)
+​
+for j in range(len(e_y)):
+    s0 = alpha_Transmission[5] * e_y[j] * (np.conj(alpha_Transmission[5] * e_y[j])) + e_z * (np.conj(e_z))
+    s1 = alpha_Transmission[5] * e_y[j] * (np.conj(alpha_Transmission[5] * e_y[j])) - e_z * (np.conj(e_z))
+    s2 = alpha_Transmission[5] * e_y[j] * (np.conj(e_z)) + e_z * (np.conj(alpha_Transmission[5] * e_y[j]))
+    s3 = I * (alpha_Transmission[5] * e_y[j] * (np.conj(e_z)) - e_z * (np.conj(alpha_Transmission[5] * e_y[j])))
+    k1 = float(s1/s0); k2 = float(s2/s0); k3 = float(s3/s0) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2,k1,k3,color = 'purple', alpha = 0.6)
+
+ax.scatter(k2,k1,k3, color = 'green', alpha = 0.9, label = '0 V aplicado')
+ax.scatter(k2,k1,k3,color = 'red', alpha = 0.6, label = 'V_{π/2} aplicado')
+ax.scatter(k2,k1,k3,color = 'red', alpha = 0.6, label = 'PDL = 0 dB')
+ax.scatter(k2,k1,k3,color = 'brown', alpha = 0.6, label = 'PDL = 1.38 dB')
+ax.scatter(k2,k1,k3,color = 'blue', alpha = 0.6, label = 'V_{3π/2} aplicado')
+ax.scatter(k2,k1,k3, color = 'purple', alpha = 0.6, label = 'PDL = 2 dB')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha=0.1)
+​
+ax.set_title("Esfera Poincaré", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+ax.legend(loc = 'upper left')
+show()
+​
+
+## Recetion System to check Rotator's effect
+from cmath import exp,pi, sin, cos, sqrt, polar
+from pylab import xlim, ylim, plot, figure, show
+from sympy import I
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+​
+%matplotlib notebook
+e_yR  = [] * len(tApplied); e_zR = [] * len(tApplied); eVpi_Recetion = [] * len(tApplied)
+​
+#Recetion System
+for c in range(len(tApplied)):
+    functionR = exp(I*tApplied[c]/V_pi * pi) 
+    eVpi_Recetion.append(functionR)
+    ey1 = eVpi_Recetion[c] 
+    e_yR.append(ey1)
+    ez1 = -1 
+    e_zR.append(ez1)
+    
+# Esfera Poincare 3D
+theta = np.arange(0,2*pi,0.1);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta);y = np.sin(phi) * np.sin (theta);z = np.cos(phi)
+​
+fig = plt.figure()
+ax = Axes3D(fig)
+​
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[0] * e_yR[j] * (np.conj(alpha_Recetion[0] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[0] * e_yR[j] * (np.conj(alpha_Recetion[0] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[0] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[0] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[0] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[0] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'red', alpha = 0.9)
+
+##Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[1] * e_yR[j] * (np.conj(alpha_Recetion[1] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[1] * e_yR[j] * (np.conj(alpha_Recetion[1] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[1] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[1] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[1] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[1] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'black', alpha = 0.6) 
+
+##Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[2] * e_yR[j] * (np.conj(alpha_Recetion[2] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[2] * e_yR[j] * (np.conj(alpha_Recetion[2] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[2] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[2] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[2] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[2] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'green', alpha = 0.6)
+    
+##Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[3] * e_yR[j] * (np.conj(alpha_Recetion[3] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[3] * e_yR[j] * (np.conj(alpha_Recetion[3] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[3] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[3] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[3] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[3] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    #m1.append(k1);m2.append(k2);m3.append(k3)
+    #Defined Quantum State at output Phase Modulator
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'red', alpha = 0.6)   
+
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[4] * e_yR[j] * (np.conj(alpha_Recetion[4] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[4] * e_yR[j] * (np.conj(alpha_Recetion[4] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[4] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[4] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[4] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[4] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'blue', alpha = 0.6)
+
+##Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_yR)):
+    s0_Recetion = alpha_Recetion[5] * e_yR[j] * (np.conj(alpha_Recetion[5] * e_yR[j])) + e_zR[j] * (np.conj(e_zR[j]))
+    s1_Recetion = alpha_Recetion[5] * e_yR[j] * (np.conj(alpha_Recetion[5] * e_yR[j])) - e_zR[j] * (np.conj(e_zR[j]))
+    s2_Recetion = alpha_Recetion[5] * e_yR[j] * (np.conj(e_zR[j])) + e_zR[j] * (np.conj(alpha_Recetion[5] * e_yR[j]))
+    s3_Recetion = I * (alpha_Recetion[5] * e_yR[j] * (np.conj(e_zR[j])) - e_zR[j] * (np.conj(alpha_Recetion[5] * e_yR[j])))
+    k1_Recetion = float(s1_Recetion/s0_Recetion); k2_Recetion = float(s2_Recetion/s0_Recetion); k3_Recetion = float(s3_Recetion/s0_Recetion) 
+    ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion,color = 'purple', alpha = 0.6)
+​
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'red', alpha = 0.9, label = 'PDL = 0 dB')
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'black', alpha = 0.6, label = 'PDL = 0.5 dB')
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'green', alpha = 0.6, label = 'PDL = 1 dB')
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'red', alpha = 0.6, label = 'PDL = 1.01 dB')
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'blue', alpha = 0.6, label = 'PDL = 1.5 dB')
+ax.scatter(k2_Recetion,k1_Recetion,k3_Recetion, color = 'purple', alpha = 0.6, label = 'PDL = 2 dB')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha=0.1)
+​
+ax.set_title("Esfera Poincaré", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+ax.legend(loc = 'upper left')
+show()
+
+## Global system
+from cmath import exp,pi, sin, cos, sqrt, polar
+from pylab import xlim, ylim, plot, figure, show
+from sympy import I
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+​
+%matplotlib notebook
+​
+tensionsApplied = np.array([0,0.5,1,1.5]) # V
+alpha_Transmission = np.array([1,1.0593,1.122,1.172,1.189,1.259]) # linear PDL transmission 
+tApplied = np.array([0,0.5]) # V
+alpha_Recetion = np.array([1,1.0593,1.122,1.123,1.189,1.259])  # linear PDL recetion
+tpoints = np.linspace(0,4)
+e_z0 = 1/sqrt(2); e_y0 = 1/sqrt(2)
+e_yG  = [] * len(tensionsApplied); e_zG = [] * len(tApplied); eVpi_Global = [] * len(tApplied)
+​
+##Global System
+for c in range(len(tApplied)):
+    functionG = exp(I * tApplied[c]/V_pi * pi)
+    eVpi_Global.append(functionG)
+    ey =  eVpi_Recetion[c] *  e_z0 
+    e_yG.append(ey)
+​
+for x in range(len(tensionsApplied)):
+    ez = - eVpi[x] *  e_y0
+    e_zG.append(ez)
+​
+## Esfera Poincare 3D
+theta = np.arange(0,2*pi,0.01);phi = np.arange(0,pi,0.01);r = 1
+theta, phi = np.meshgrid(theta,phi); x = np.sin(phi) * np.cos (theta);y = np.sin(phi) * np.sin (theta);z = np.cos(phi) 
+​
+fig = plt.figure()
+ax = Axes3D(fig)
+​
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for p in range(len(e_yG)):
+    for j in range(len(e_zG)):
+        s0_Global = alpha_Recetion[0] * e_yG[p] * (np.conj(alpha_Recetion[0] * e_yG[p])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s1_Global = alpha_Recetion[0] * e_yG[p] * (np.conj(alpha_Recetion[0] * e_yG[p])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s2_Global = alpha_Recetion[0] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[0] * e_yG[p]))
+        s3_Global = I * (alpha_Recetion[0] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[0] * e_yG[p])))
+        k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+        #Defined Quantum State at output Phase Modulator
+        ax.scatter(k2_Global,k1_Global,k3_Global,color = 'red', alpha = 0.9)
+
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for p in range(len(e_yG)):
+    for j in range(len(e_zG)):
+        s0_Global = alpha_Recetion[1] * e_yG[p] * (np.conj(alpha_Recetion[1] * e_yG[p])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s1_Global = alpha_Recetion[1] * e_yG[p] * (np.conj(alpha_Recetion[1] * e_yG[p])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s2_Global = alpha_Recetion[1] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[1] * e_yG[p]))
+        s3_Global = I * (alpha_Recetion[1] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[1] * e_yG[p])))
+        k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+        #Defined Quantum State at output Phase Modulator
+        ax.scatter(k2_Global,k1_Global,k3_Global,color = 'black', alpha = 0.6) 
+
+####Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_zG)):
+    for p in range(len(e_yG)):
+        s0_Global = alpha_Recetion[2] * e_yG[p] * (np.conj(alpha_Recetion[2] * e_yG[p])) + (alpha_Transmission[3] * e_zG[j]) * (np.conj(alpha_Transmission[3] * e_zG[j]))
+        s1_Global = alpha_Recetion[2] * e_yG[p] * (np.conj(alpha_Recetion[2] * e_yG[p])) - (alpha_Transmission[3] * e_zG[j]) * (np.conj(alpha_Transmission[3] * e_zG[j]))
+        s2_Global = alpha_Recetion[2] * e_yG[p] * (np.conj(alpha_Transmission[3] * e_zG[j])) + (alpha_Transmission[3] * e_zG[j]) * (np.conj(alpha_Recetion[2] * e_yG[p]))
+        s3_Global = I * (alpha_Recetion[2] * e_yG[p] * (np.conj(alpha_Transmission[3] * e_zG[j])) - (alpha_Transmission[3] * e_zG[j]) * (np.conj(alpha_Recetion[2] * e_yG[p])))
+        k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+        #Defined Quantum State at output Phase Modulator
+        ax.scatter(k2_Global,k1_Global,k3_Global,color = 'green', alpha = 0.6)
+    
+#Stokes Parameteres for any applied voltage to Phase Modulator
+for j in range(len(e_zG)):
+     for p in range(len(e_yG)):
+        s0_Global = alpha_Recetion[4] * e_yG[p] * (np.conj(alpha_Recetion[4] * e_yG[p])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s1_Global = alpha_Recetion[4] * e_yG[p] * (np.conj(alpha_Recetion[4] * e_yG[p])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s2_Global = alpha_Recetion[4] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[4] * e_yG[p]))
+        s3_Global = I * (alpha_Recetion[4] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[4] * e_yG[p])))
+        #Defined Quantum State at output Phase Modulator
+        k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+        #Defined Quantum State at output Phase Modulator
+        ax.scatter(k2_Global,k1_Global,k3_Global,color = 'blue', alpha = 0.6)
+
+for j in range(len(e_zG)):
+     for p in range(len(e_yG)):
+        s0_Global = alpha_Recetion[5] * e_yG[p] * (np.conj(alpha_Recetion[5] * e_yG[p])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s1_Global = alpha_Recetion[5] * e_yG[p] * (np.conj(alpha_Recetion[5] * e_yG[p])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Transmission[0] * e_zG[j]))
+        s2_Global = alpha_Recetion[5] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) + (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[5] * e_yG[p]))
+        s3_Global = I * (alpha_Recetion[5] * e_yG[p] * (np.conj(alpha_Transmission[0] * e_zG[j])) - (alpha_Transmission[0] * e_zG[j]) * (np.conj(alpha_Recetion[5] * e_yG[p])))
+        #Defined Quantum State at output Phase Modulator
+        k1_Global = float(s1_Global/s0_Global); k2_Global = float(s2_Global/s0_Global); k3_Global = float(s3_Global/s0_Global) 
+        #Defined Quantum State at output Phase Modulator
+        ax.scatter(k2_Global,k1_Global,k3_Global,color = 'purple', alpha = 0.6)
+
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'red', alpha = 0.9, label = 'ΔPDL = 0 dB')
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'black', alpha = 0.6, label = 'ΔPDL = 0 dB')
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'black', alpha = 0.6)
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'green', alpha = 0.6, label = 'ΔPDL')
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'blue', alpha = 0.6, label = 'ΔPDL = 1.5 dB')
+ax.scatter(k2_Global,k1_Global,k3_Global, color = 'purple', alpha = 0.6, label = 'ΔPDL = 2 dB')
+ax.plot_surface(x,y,z, color = 'yellow', alpha = 0.3)
+ax.plot_wireframe(x,y,z, color = 'blue', alpha=0.1)
+
+ax.set_title("Esfera Poincaré", fontsize = 13)
+ax.set_xlabel("s2/s0", fontsize = 10)
+ax.set_ylabel("s1/s0", fontsize = 10)
+ax.set_zlabel("s3/s0", fontsize = 10)
+ax.legend(loc = 'upper left')
+show()
